@@ -38,6 +38,14 @@
         # Sinon on le ramène à l'accueil
         header('Location: ./');
     }
+
+    # Selection du nombre de paniers dans la bd
+    $nb_sql = "SELECT COUNT(*) AS total FROM panier";
+    $nb_query = mysqli_query($connection, $nb_sql);
+    if ($nb_query) {
+        $nb_panier = mysqli_fetch_assoc($nb_query);
+        $nb_panier = $nb_panier['total'];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -243,7 +251,7 @@
         <ul class="nav">
             <li><a href="./article.php">Ajouter article</a></li>
             <li class="helper">
-                <a href="./pannier.php"><span class="number">0</span>Pannier</a>
+                <a href="./pannier.php"><span class="number"><?php echo $nb_panier ?? 0;?></span>Pannier</a>
             </li>
         </ul>
     </header>
