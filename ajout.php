@@ -81,4 +81,3 @@
         # Sinon on le ramène à l'accueil
         header('Location: ./');
     }
-?>

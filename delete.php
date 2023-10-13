@@ -51,4 +51,3 @@
         # Sinon on le ramène au panier
         header('Location: ./pannier.php');
     }
-?>

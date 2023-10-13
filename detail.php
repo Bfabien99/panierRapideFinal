@@ -1,67 +1,67 @@
 <?php
-    # On se connecte à notre base de donnée
-    $connection = mysqli_connect('localhost','root','','boutique');
+# On se connecte à notre base de donnée
+$connection = mysqli_connect('localhost', 'root', '', 'boutique');
 
-    # Si la connexion n'a pas aboutie, on affiche une erreur
-    if(!$connection){
-        die("Une erreur est survenue lors de la liason avec la base de donnée. Veuillez réessayer plus tard!");
-    }
+# Si la connexion n'a pas aboutie, on affiche une erreur
+if (!$connection) {
+    die("Une erreur est survenue lors de la liason avec la base de donnée. Veuillez réessayer plus tard!");
+}
 
-    # Vérifie si le paramètre article_id existe
-    if(!empty($_GET['article_id'])){
-        $article_id = (int) $_GET['article_id']; # Conversion en int
+# Vérifie si le paramètre article_id existe
+if (!empty($_GET['article_id'])) {
+    $article_id = (int) $_GET['article_id']; # Conversion en int
 
-        # Si la conversion ne retourne pas de valeur on le ramène à l'accueil
-        if(!$article_id){
-            header('Location: ./');
-        }
-
-        # On récupère l'article en fonction de l'id
-        $sql = "SELECT * FROM article WHERE id = ?";
-        $stmt = mysqli_prepare($connection, $sql); # On prépare la requête (évite les injections SQL)
-        $query = mysqli_stmt_bind_param($stmt, "i", $article_id); 
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        if($result){
-            # On récupère les données de la requête
-            $article = mysqli_fetch_assoc($result);
-
-            if(!$article){
-                header('Location: ./');
-            }
-        }else{
-            echo "Oops! Une erreur s'est produite lors de l'insertion des données... Veuillez réessayer plus tard";
-            die();
-        }
-
-    }else{
-        # Sinon on le ramène à l'accueil
+    # Si la conversion ne retourne pas de valeur on le ramène à l'accueil
+    if (!$article_id) {
         header('Location: ./');
     }
 
-    # Selection du nombre de paniers dans la bd
-    $nb_sql = "SELECT COUNT(*) AS total FROM panier";
-    $nb_query = mysqli_query($connection, $nb_sql);
-    if ($nb_query) {
-        $nb_panier = mysqli_fetch_assoc($nb_query);
-        $nb_panier = $nb_panier['total'];
+    # On récupère l'article en fonction de l'id
+    $sql = "SELECT * FROM article WHERE id = ?";
+    $stmt = mysqli_prepare($connection, $sql); # On prépare la requête (évite les injections SQL)
+    $query = mysqli_stmt_bind_param($stmt, "i", $article_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result) {
+        # On récupère les données de la requête
+        $article = mysqli_fetch_assoc($result);
+
+        if (!$article) {
+            header('Location: ./');
+        }
+    } else {
+        echo "Oops! Une erreur s'est produite lors de l'insertion des données... Veuillez réessayer plus tard";
+        die();
     }
+} else {
+    # Sinon on le ramène à l'accueil
+    header('Location: ./');
+}
+
+# Selection du nombre de paniers dans la bd
+$nb_sql = "SELECT COUNT(*) AS total FROM panier";
+$nb_query = mysqli_query($connection, $nb_sql);
+if ($nb_query) {
+    $nb_panier = mysqli_fetch_assoc($nb_query);
+    $nb_panier = $nb_panier['total'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script defer src="https://kit.fontawesome.com/1f88d87af5.js" crossorigin="anonymous"></script>
     <title>MON PANIER RAPIDE</title>
     <style>
-        *{
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        body{
+        body {
             width: 100%;
             min-height: 100vh;
             display: flex;
@@ -69,7 +69,7 @@
             position: relative;
         }
 
-        header{
+        header {
             display: flex;
             padding: 20px;
             justify-content: space-evenly;
@@ -80,18 +80,18 @@
             align-items: center;
         }
 
-        header a{
+        header a {
             text-decoration: none;
             color: #fff;
             text-shadow: 0px 0px 2px #000000;
             padding: 5px;
         }
 
-        header a:hover{
+        header a:hover {
             border: 2px solid #fff;
         }
 
-        ul{
+        ul {
             list-style: none;
             display: flex;
             width: 60%;
@@ -101,9 +101,9 @@
         }
 
 
-        .helper{
+        .helper {
             display: flex;
-            align-items:center ;
+            align-items: center;
             position: relative;
             gap: 2em;
             width: 50%;
@@ -111,27 +111,27 @@
             justify-content: space-around;
         }
 
-        .helper .number{
+        .helper .number {
             background-color: red;
             border-radius: 100%;
             font-weight: bold;
             padding: 5px;
         }
 
-        .sticky{
+        .sticky {
             position: sticky;
             backdrop-filter: blur(5px);
             box-shadow: 0px 0px 10px 2px #58585830;
         }
 
-        main{
+        main {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             gap: 2em;
         }
 
-        .banner{
+        .banner {
             max-height: 400px;
             overflow: hidden;
             position: relative;
@@ -141,7 +141,7 @@
         }
 
 
-        .banner h3{
+        .banner h3 {
             position: absolute;
             padding: 10px;
             border: 2px solid #fff;
@@ -149,23 +149,23 @@
             text-shadow: 0px 0px 2px #000000;
         }
 
-        .banner img{
+        .banner img {
             width: 100%;
             object-fit: cover;
         }
 
-        .content{
+        .content {
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 2em;
         }
 
-        .content h2{
+        .content h2 {
             text-align: center;
         }
 
-        .articleBox{
+        .articleBox {
             display: flex;
             justify-content: space-around;
             gap: 2em;
@@ -175,24 +175,25 @@
             margin: 0 auto;
         }
 
-        .imgBox, .infoBox{
+        .imgBox,
+        .infoBox {
             width: 100%;
             max-width: 500px;
         }
 
-        .imgBox{
+        .imgBox {
             width: 100%;
             height: 400px;
             box-shadow: 0px 0px 5px 1px #5757575c;
         }
 
-        .imgBox img{
+        .imgBox img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .infoBox{
+        .infoBox {
             padding: 20px;
             background-color: #d1d1d13c;
             color: #444;
@@ -202,32 +203,32 @@
             gap: 1em;
         }
 
-        .price_qty{
+        .price_qty {
             display: flex;
             justify-content: space-between;
             padding: 10px;
         }
 
-        .price_qty h4{
+        .price_qty h4 {
             color: #0000008e;
         }
 
-        .price_qty *{
+        .price_qty * {
             border: 1px solid;
             padding: 5px;
             flex-grow: 1;
         }
 
-        .price{
+        .price {
             font-size: 1.2em;
             font-weight: bold
         }
 
-        .description{
+        .description {
             text-align: justify;
         }
 
-        .more{
+        .more {
             text-decoration: none;
             color: #ffffff;
             padding: 5px;
@@ -238,11 +239,12 @@
             margin: 0 auto;
         }
 
-        .more:hover{
+        .more:hover {
             background-color: #0f00dba1;
         }
     </style>
 </head>
+
 <body>
     <header id="header">
         <div class="brand">
@@ -251,7 +253,7 @@
         <ul class="nav">
             <li><a href="./article.php">Ajouter article</a></li>
             <li class="helper">
-                <a href="./pannier.php"><span class="number"><?php echo $nb_panier ?? 0;?></span>Pannier</a>
+                <a href="./pannier.php"><span class="number"><?php echo $nb_panier ?? 0; ?></span>Pannier</a>
             </li>
         </ul>
     </header>
@@ -261,33 +263,33 @@
             <img src="https://images.unsplash.com/photo-1601330862030-1e08c703ac04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGFuaWVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" alt="">
         </section>
         <div class="content">
-            <h2>Détail de l'article : <?php echo ucwords($article['nom'])?></h2>
+            <h2>Détail de l'article : <?php echo ucwords($article['nom']) ?></h2>
             <div class="articleBox">
                 <div class="imgBox">
-                    <img src="<?php echo $article['image']?>" alt="<?php echo $article['nom']?>">
+                    <img src="<?php echo $article['image'] ?>" alt="<?php echo $article['nom'] ?>">
                 </div>
                 <div class="infoBox">
                     <div class="price_qty">
-                        <h4><?php echo ucwords($article['nom'])?></h4>
-                        <p class="price"><?php echo number_format($article['prix'], 2, '.')?> fcfa</p>
-                        <p>Stock : <?php echo $article['stock']?></p>
+                        <h4><?php echo ucwords($article['nom']) ?></h4>
+                        <p class="price"><?php echo number_format($article['prix'], 2, '.') ?> fcfa</p>
+                        <p>Stock : <?php echo $article['stock'] ?></p>
                     </div>
                     <div class="description">
-                        <p><?php echo $article['description']?></p>
+                        <p><?php echo $article['description'] ?></p>
                     </div>
-                    <a href="ajout.php?article_id=<?php echo $article['id']?>" class="more">Ajouter au panier</a>
+                    <a href="ajout.php?article_id=<?php echo $article['id'] ?>" class="more">Ajouter au panier</a>
                 </div>
-        </div>
+            </div>
     </main>
 </body>
 <script>
-    document.addEventListener('scroll',()=>{
-        if(window.scrollY>=10){
+    document.addEventListener('scroll', () => {
+        if (window.scrollY >= 10) {
             document.querySelector('#header').classList.add('sticky')
-        }else{
+        } else {
             document.querySelector('#header').classList.remove('sticky')
         }
     })
-    
 </script>
+
 </html>

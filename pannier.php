@@ -242,7 +242,7 @@ if ($nb_query) {
         <ul class="nav">
             <li><a href="./article.php">Ajouter article</a></li>
             <li class="helper">
-                <a href="./pannier.php"><span class="number"><?php echo $nb_panier ?? 0;?></span>Pannier</a>
+                <a href="./pannier.php"><span class="number"><?php echo $nb_panier ?? 0; ?></span>Pannier</a>
             </li>
         </ul>
     </header>
@@ -272,13 +272,13 @@ if ($nb_query) {
                                     <td>Tomate</td>
                                     <td class="img">
                                         <div class="imgBox">
-                                            <img src="<?php echo $panier['image'];?>" alt="">
+                                            <img src="<?php echo $panier['image']; ?>" alt="">
                                         </div>
                                     </td>
-                                    <td><input type="number" value="<?php echo $panier['quantite'];?>" id="article<?php echo $panier['id'];?>" min="1"></td>
-                                    <td><?php echo number_format($panier['prix'], 2, '.');?></td>
-                                    <td><?php echo number_format(($panier['prix'] * $panier['quantite']), 2, '.');?></td>
-                                    <td><i class="fas fa-check" style="color: blue; margin: 0.5em;" onclick="updateCart(event, <?php echo $panier['id'];?>)"></i><i class="fas fa-trash" style="color: red; margin: 0.5em;" onclick="deleteCart(event, <?php echo $panier['id'];?>)"></i></td>
+                                    <td><input type="number" value="<?php echo $panier['quantite']; ?>" id="article<?php echo $panier['id']; ?>" min="1"></td>
+                                    <td><?php echo number_format($panier['prix'], 2, '.'); ?></td>
+                                    <td><?php echo number_format(($panier['prix'] * $panier['quantite']), 2, '.'); ?></td>
+                                    <td><i class="fas fa-check" style="color: blue; margin: 0.5em;" onclick="updateCart(event, <?php echo $panier['id']; ?>)"></i><i class="fas fa-trash" style="color: red; margin: 0.5em;" onclick="deleteCart(event, <?php echo $panier['id']; ?>)"></i></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
@@ -291,21 +291,20 @@ if ($nb_query) {
                 <div class="bilan">
                     <h4>Details facture</h4>
                     <?php if (!empty($paniers)) : ?>
-                        <?php $total = 0;?>
+                        <?php $total = 0; ?>
                         <div class="detailBox">
-
                             <?php foreach ($paniers as $panier) : ?>
-                                <?php $total += $panier['prix'] * $panier['quantite'];?>
+                                <?php $total += $panier['prix'] * $panier['quantite']; ?>
                                 <div class="details">
-                                    <p><?php echo $panier['nom'];?></p>
-                                    <p><?php echo $panier['quantite'].' x '.number_format($panier['prix'], 2, '.');?></p>
-                                    <p><?php echo number_format(($panier['prix'] * $panier['quantite']), 2, '.');?> FCFA</p>
+                                    <p><?php echo $panier['nom']; ?></p>
+                                    <p><?php echo $panier['quantite'] . ' x ' . number_format($panier['prix'], 2, '.'); ?></p>
+                                    <p><?php echo number_format(($panier['prix'] * $panier['quantite']), 2, '.'); ?> FCFA</p>
                                 </div>
                             <?php endforeach; ?>
                             <div class="details last">
-                                    <p>Total</p>
-                                    <p><?php echo number_format($total, 2, '.');?> FCFA</p>
-                                </div>
+                                <p>Total</p>
+                                <p><?php echo number_format($total, 2, '.'); ?> FCFA</p>
+                            </div>
                             <div class="details">
                                 <a href="" class="more">Commander</a>
                             </div>
@@ -329,23 +328,23 @@ if ($nb_query) {
 
     function updateCart(event, articleId) {
         event.preventDefault(); // Empêche le comportement par défaut du lien
-        
+
         // Récupère la valeur de l'élément <input> en utilisant l'identifiant unique
         var inputElement = document.getElementById("article" + articleId);
         var quantite = inputElement.value;
-        
-        let url = "./modifier_qte.php?article_id="+articleId+"&qte="+quantite;
+
+        let url = "./modifier_qte.php?article_id=" + articleId + "&qte=" + quantite;
         window.location.href = url;
     }
 
     function deleteCart(event, articleId) {
         event.preventDefault(); // Empêche le comportement par défaut du lien
-        
+
         // Récupère la valeur de l'élément <input> en utilisant l'identifiant unique
         var inputElement = document.getElementById("article" + articleId);
-        
-        if(confirm('Voulez vous réellement supprimer cet article du panier?')){
-            let url = "./delete.php?article_id="+articleId;
+
+        if (confirm('Voulez vous réellement supprimer cet article du panier?')) {
+            let url = "./delete.php?article_id=" + articleId;
             window.location.href = url;
         }
 
